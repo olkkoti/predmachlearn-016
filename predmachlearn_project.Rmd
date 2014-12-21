@@ -15,12 +15,13 @@ cleanedData <- originalData[, -which(names(originalData) %in% columnsToBeRemoved
 Now, let's split the data to training and testing sets. Let's use rule-of-thumb-ish 3/4 split.
 ```{r}
 library(caret)
+set.seed(1234)
 inTrain <- createDataPartition(y=cleanedData$classe, p=0.75, list=FALSE)
 training <- cleanedData[inTrain,]
 testing <- cleanedData[-inTrain,]
 ```
 Let's try random forest. However, as we have relatively large amount of data, let's restrict number of iterations to three.
-```{r, echo=FALSE}
+```{r}
 model <- train(classe~., training, method="rf", trControl = trainControl(method = "cv", number = 3, allowParallel = TRUE))
 prediction <- predict(model, testing)
 ```
@@ -28,4 +29,4 @@ prediction <- predict(model, testing)
 ```{r}
 confusionMatrix(testing$classe, prediction)
 ```
-From the output we can see that our model gives pretty good accuracy of 0.9939. We can use this to give predictions in the second part of the homework.
+From the output we can see that our model gives pretty good accuracy of 0.99. We can use this to give predictions in the second part of the homework.
