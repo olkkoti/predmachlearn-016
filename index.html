@@ -67,46 +67,49 @@ cleanedData &lt;- originalData[, -which(names(originalData) %in% columnsToBeRemo
 <pre class="r"><code>library(caret)</code></pre>
 <pre><code>## Loading required package: lattice
 ## Loading required package: ggplot2</code></pre>
-<pre class="r"><code>inTrain &lt;- createDataPartition(y=cleanedData$classe, p=0.75, list=FALSE)
+<pre class="r"><code>set.seed(1234)
+inTrain &lt;- createDataPartition(y=cleanedData$classe, p=0.75, list=FALSE)
 training &lt;- cleanedData[inTrain,]
 testing &lt;- cleanedData[-inTrain,]</code></pre>
 <p>Let’s try random forest. However, as we have relatively large amount of data, let’s restrict number of iterations to three.</p>
+<pre class="r"><code>model &lt;- train(classe~., training, method=&quot;rf&quot;, trControl = trainControl(method = &quot;cv&quot;, number = 3, allowParallel = TRUE))</code></pre>
 <pre><code>## Loading required package: randomForest
 ## randomForest 4.6-10
 ## Type rfNews() to see new features/changes/bug fixes.</code></pre>
+<pre class="r"><code>prediction &lt;- predict(model, testing)</code></pre>
 <pre class="r"><code>confusionMatrix(testing$classe, prediction)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1391    3    1    0    0
-##          B    8  939    2    0    0
-##          C    0    2  852    1    0
-##          D    0    5    8  791    0
-##          E    0    0    1    3  897
+##          A 1395    0    0    0    0
+##          B    7  939    3    0    0
+##          C    0    9  844    2    0
+##          D    0    1    8  795    0
+##          E    0    0    2    0  899
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.9931          
-##                  95% CI : (0.9903, 0.9952)
-##     No Information Rate : 0.2853          
+##                Accuracy : 0.9935          
+##                  95% CI : (0.9908, 0.9955)
+##     No Information Rate : 0.2859          
 ##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
 ##                                           
-##                   Kappa : 0.9912          
+##                   Kappa : 0.9917          
 ##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9943   0.9895   0.9861   0.9950   1.0000
-## Specificity            0.9989   0.9975   0.9993   0.9968   0.9990
-## Pos Pred Value         0.9971   0.9895   0.9965   0.9838   0.9956
-## Neg Pred Value         0.9977   0.9975   0.9970   0.9990   1.0000
-## Prevalence             0.2853   0.1935   0.1762   0.1621   0.1829
-## Detection Rate         0.2836   0.1915   0.1737   0.1613   0.1829
+## Sensitivity            0.9950   0.9895   0.9848   0.9975   1.0000
+## Specificity            1.0000   0.9975   0.9973   0.9978   0.9995
+## Pos Pred Value         1.0000   0.9895   0.9871   0.9888   0.9978
+## Neg Pred Value         0.9980   0.9975   0.9968   0.9995   1.0000
+## Prevalence             0.2859   0.1935   0.1748   0.1625   0.1833
+## Detection Rate         0.2845   0.1915   0.1721   0.1621   0.1833
 ## Detection Prevalence   0.2845   0.1935   0.1743   0.1639   0.1837
-## Balanced Accuracy      0.9966   0.9935   0.9927   0.9959   0.9995</code></pre>
-<p>From the output we can see that our model gives pretty good accuracy of 0.9939. We can use this to give predictions in the second part of the homework.</p>
+## Balanced Accuracy      0.9975   0.9935   0.9911   0.9976   0.9998</code></pre>
+<p>From the output we can see that our model gives pretty good accuracy of 0.99. We can use this to give predictions in the second part of the homework.</p>
 
 
 </div>
